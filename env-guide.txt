@@ -1,0 +1,13 @@
+
+#LOG DETAILS
+LOG_LEVEL=info
+
+
+#POSTGRESQL DB URL
+DATABASE_URL=postgresql://neondb_owner:npg_WBrMV34pdxoC@ep-bitter-bread-b4b9mrea-pooler.c-6.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+
+
+#CLOUDINARY DETAILS
+CLOUDINARY_CLOUD_NAME=dnqnf4j4d
+CLOUDINARY_API_KEY=693631733947956
+CLOUDINARY_API_SECRET=BM_IbuzdXRr0NgpkMXqY_CPuxKQ
