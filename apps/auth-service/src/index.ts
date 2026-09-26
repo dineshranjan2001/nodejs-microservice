@@ -13,7 +13,7 @@ config({
     path: resolve(process.cwd(), "../../.env")
 });
 
-const PORT = process.env.AUTH_PORT || 30001;
+const PORT = process.env.AUTH_PORT;
 const app = express();
 app.use(httpLogger);
 app.use(express.json());

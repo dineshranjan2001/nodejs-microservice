@@ -4,7 +4,8 @@
   "private": "true",
   "main": "index.ts",
   "scripts": {
-    "dev:auth":"npm run dev -w auth-service"
+    "dev:auth": "npm run dev -w auth-service",
+    "db:migrate": "tsx scripts/db-migrate.ts"
   },
   "workspaces": [
     "apps/*",
@@ -14,5 +15,8 @@
   "devDependencies": {
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.4"
   }
 }
