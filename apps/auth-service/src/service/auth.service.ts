@@ -1,9 +1,9 @@
-import { AppError } from "shared";
+import { AppError, generateToken } from "shared";
 import type { LoginInput, RegisterInput } from "../schema/auth.schema";
 import { createUser, findByEmail, findById } from "../repository/auth.repository";
 import bcrypt, { compareSync } from "bcryptjs";
 import { convertToCommonResponse } from "../utils/auth.utils";
-import { generateToken } from "../utils/jwt.utils";
+
 
 export async function register(userDetails: RegisterInput) {
   const getExistUserDetails = await findByEmail(userDetails.email);

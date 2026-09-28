@@ -14,6 +14,7 @@ export const loginController=asyncHandler(async(req:Request,res:Response)=>{
 });
 
 export const getMeController=asyncHandler(async(req:Request,res:Response)=>{
+    console.log("enterrr into the getMeController ",req.header('x-user-id'));
     const userId=req.header('x-user-id');
     if(!userId){
         throw new AppError(401,'Missing x-user-id');

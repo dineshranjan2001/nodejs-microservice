@@ -6,6 +6,7 @@ import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 import { createProxyMiddleware } from "http-proxy-middleware";
+import { gatewayAuthHandler } from "./middleware/gatewayauthhandler.middleware";
 
 config({ path: resolve(process.cwd(), ".env") });
 config({ path: resolve(process.cwd(), "../../.env") });
@@ -15,8 +16,6 @@ const AUTH_SERVICE_URL =
   process.env.AUTH_SERVICE_URL || "http://localhost:3001";
 
 const app = express();
-
-console.log(process.env.AUTH_SERVICE_URL);
 
 //secure default http headers
 app.use(helmet());
@@ -45,6 +44,7 @@ app.get("/health", (_req, res) => {
 //proxy configuration
 app.use(
   "/auth",
+  gatewayAuthHandler,
   createProxyMiddleware({
     target: AUTH_SERVICE_URL,
     changeOrigin: true,

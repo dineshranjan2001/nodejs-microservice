@@ -6,3 +6,6 @@ export { httpLogger } from "./logger/httplogger";
 export { successHandler, failureHandler } from "./response/response";
 export { validateBody } from "./validation/reqbodyvalidatior";
 export { asyncHandler } from "./utils/asynchandler";
+export type { JwtPayload, UserRole } from "./auth/types";
+export { generateToken, verifyToken } from "./auth/jwt";
+export { requireGatewaySecret } from "./auth/gatewayauth";
