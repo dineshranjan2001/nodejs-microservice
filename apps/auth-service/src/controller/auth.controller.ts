@@ -21,5 +21,5 @@ export const getMeController=asyncHandler(async(req:Request,res:Response)=>{
     }
 
     const userDetails=await getMe(userId);
-    successHandler(res,201,true,"User fetch successfully",userDetails);
+    successHandler(res,200,true,"User fetch successfully",userDetails);
 });

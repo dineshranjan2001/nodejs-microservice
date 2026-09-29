@@ -11,7 +11,7 @@ config({ path: resolve(process.cwd(), ".env") });
   getPool()
     .query(sql)
     .then((result) =>
-      console.log("Migrated ", file, " and command ", result.command),
+      console.log("Migrated ", file),
     );
   await closePool();
 })().catch((error) => {

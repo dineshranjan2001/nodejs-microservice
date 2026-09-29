@@ -17,6 +17,17 @@ function stripeIndentityHeaders(req: Request) {
     }
 }
 
+//utility function for validate the client header
+// function verifyHeaders(req: Request, userId: string, role: string) {
+//     const clientUserId = req.headers['x-user-id'];
+//     console.log("clientUserId",clientUserId);
+//     const clientRole = req.headers['x-user-role'];
+
+//     if ((clientUserId !== undefined && clientUserId !== userId) || (clientRole !== undefined && clientRole !== role)) {
+//         throw new AppError(400, "Invalid user identity");
+//     }
+// }
+
 // utility function for attach the gateway secret
 function attachGatewaySecret(req: Request) {
     const gatewaySecret = process.env.GATEWAY_SECRET;
@@ -37,10 +48,6 @@ function getRequestPath(req: Request) {
 
 // utilify function for attach the identity header
 function attachIdentityHeaders(req: Request, userId: string, role: string) {
-    console.log("req.header ",req.headers['x-user-id']);
-    if(req.headers['x-user-id']!==userId){
-        throw new AppError(400,"Invalid request");
-    }
     req.headers['x-user-id'] = userId;
     req.headers['x-user-role'] = role;
 }
@@ -60,10 +67,7 @@ export function gatewayAuthHandler(req: Request, _res: Response, next: NextFunct
         // if it is public auth then skip the auth otherwise check the auth.
         const path = getRequestPath(req);
 
-        console.log("path ", path);
-
         // if it returns true then skip the auth
-        console.log(isPublicRoute(req.method, path));
         if (isPublicRoute(req.method, path)) {
             return next();
         }
@@ -75,8 +79,8 @@ export function gatewayAuthHandler(req: Request, _res: Response, next: NextFunct
         }
         const token = authHeader.slice("Bearer ".length).trim();
         const payload = verifyToken(token);
-        console.log("authHeader ", authHeader);
-        console.log("payload ", payload);
+
+
 
         // RBAC -> is the role allowed on this method and this path.
         const allowedRoles = getAllowedRoles(req.method, path);
@@ -84,15 +88,15 @@ export function gatewayAuthHandler(req: Request, _res: Response, next: NextFunct
             throw new AppError(404, "Route not found.");
         }
 
-        console.log("allowed roles ", allowedRoles);
-
         // check the access for the routes 
         if (!allowedRoles.includes(payload.role)) {
             throw new AppError(403, "Forbidden, you do not have access to this route.");
         }
 
+        
         // attach the identity headers.
         attachIdentityHeaders(req, payload.userId, payload.role);
+       
         return next();
     } catch (error) {
         if (error instanceof AppError) {
