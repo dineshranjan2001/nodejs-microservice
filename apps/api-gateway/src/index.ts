@@ -15,6 +15,8 @@ const PORT = process.env.GATEWAY_PORT;
 const AUTH_SERVICE_URL =
   process.env.AUTH_SERVICE_URL || "http://localhost:3001";
 
+const TASK_SERVICE_URL = process.env.TASK_SERVICE_URL || "http://localhost:3002";
+
 const app = express();
 
 //secure default http headers
@@ -51,7 +53,15 @@ app.use(
     pathRewrite: (path) => `/auth${path}`,
   }),
 );
-
+app.use(
+  '/task',
+  gatewayAuthHandler,
+  createProxyMiddleware({
+    target: TASK_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: (path) => `/task${path}`
+  })
+);
 app.use((_req, _res, next) => {
   next(new AppError(404, "Route not found."));
 });
