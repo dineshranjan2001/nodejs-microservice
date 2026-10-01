@@ -20,7 +20,7 @@ export function getUserHeaderInfo(req: Request):{
     const userRole = req.headers['x-user-role'];
     
     if (typeof userId !== "string" || typeof userRole !== "string") {
-        throw new Error("Required user headers are missing or invalid");
+        throw new AppError(400,"Required user headers are missing or invalid");
     }
     return {
         userId:userId as string,

@@ -1,18 +1,19 @@
 import express from "express";
 import { config } from "dotenv";
 import { resolve } from "node:path";
-import { AppError, errorHandler, httpLogger, logger, successHandler } from "shared";
+import { AppError, errorHandler, httpLogger, logger, requireGatewaySecret, successHandler } from "shared";
 import taskRoutes from "./routes/task.route";
 
 const app = express();
 
 config({ path: resolve(process.cwd(), ".env") });
 config({ path: resolve(process.cwd(), "../../.env") });
+app.use(express.json());
 
 app.use(httpLogger);
 
 
-app.use("/task",taskRoutes);
+app.use("/tasks",requireGatewaySecret,taskRoutes);
 
 app.get("/health", (_req, res) => {
     successHandler(res, 200, true, "api-gateway health is good.", {
@@ -23,7 +24,7 @@ app.get("/health", (_req, res) => {
 app.use((_req, _res, next) => {
     next(new AppError(404, "Route not found."));
 });
-app.use(express.json());
+
 app.use(errorHandler);
 
 const TASK_PORT = process.env.TASK_PORT || 3002;

@@ -10,7 +10,7 @@ export const registerController=asyncHandler(async(req:Request,res:Response)=>{
 
 export const loginController=asyncHandler(async(req:Request,res:Response)=>{
     const loginUserDetails=await login(req.body);
-    successHandler(res,201,true,"User login in successfully",loginUserDetails);
+    successHandler(res,200,true,"User login in successfully",loginUserDetails);
 });
 
 export const getMeController=asyncHandler(async(req:Request,res:Response)=>{

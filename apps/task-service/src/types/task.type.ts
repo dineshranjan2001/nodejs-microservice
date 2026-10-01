@@ -15,6 +15,11 @@ export interface CreateTaskInput {
 }
 
 export interface ListTaskQueryInput {
-     userId?: string;
+    userId?: string;
     role: string
+}
+
+export interface UpdateTaskInput {
+    title: string;
+    status: TaskStatus;
 }

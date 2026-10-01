@@ -1,7 +1,7 @@
 import type { UserRole } from "shared";
 import type { ProtectedRoutesRbacTemplate, PublicRoutesTemplate } from "./type/rbacrule.type";
 
-export const publicRoutes:PublicRoutesTemplate[] = [
+export const publicRoutes: PublicRoutesTemplate[] = [
     {
         method: "POST",
         path: "/auth/register"
@@ -17,7 +17,33 @@ const protectedRoutes: ProtectedRoutesRbacTemplate[] = [
         method: "GET",
         path: "/auth/me",
         roles: ['USER', 'ADMIN']
+    },
+    {
+        method: "POST",
+        path: "/tasks/create",
+        roles: ['USER', 'ADMIN']
+    },
+    {
+        method: "GET",
+        path: "/tasks/get-all",
+        roles: ['USER', 'ADMIN']
+    },
+    {
+        method: "GET",
+        path: "/tasks/:taskId",
+        roles: ['USER', 'ADMIN']
+    },
+    {
+        method: "PUT",
+        path: "/tasks/:taskId",
+        roles: ['USER', 'ADMIN']
+    },
+    {
+        method: "DELETE",
+        path: "/tasks/:taskId",
+        roles: ['ADMIN']
     }
+
 ]
 
 
@@ -29,7 +55,7 @@ function matchPath(pattern: string, actual: string): boolean {
         return true;
     }
     const patternParts = pattern.split('/');
-    const actualParts = pattern.split('/');
+    const actualParts = actual.split('/');
     if (patternParts.length !== actualParts.length) {
         return false;
     }

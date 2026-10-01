@@ -54,12 +54,12 @@ app.use(
   }),
 );
 app.use(
-  '/task',
+  '/tasks',
   gatewayAuthHandler,
   createProxyMiddleware({
     target: TASK_SERVICE_URL,
     changeOrigin: true,
-    pathRewrite: (path) => `/task${path}`
+    pathRewrite: (path) => `/tasks${path}`
   })
 );
 app.use((_req, _res, next) => {
