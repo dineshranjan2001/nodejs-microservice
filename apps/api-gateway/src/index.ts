@@ -1,7 +1,13 @@
 import { config } from "dotenv";
 import { resolve } from "node:path";
 import express from "express";
-import { AppError, errorHandler, httpLogger, logger, successHandler } from "shared";
+import {
+  AppError,
+  errorHandler,
+  httpLogger,
+  logger,
+  successHandler,
+} from "shared";
 import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
@@ -14,8 +20,10 @@ config({ path: resolve(process.cwd(), "../../.env") });
 const PORT = process.env.GATEWAY_PORT;
 const AUTH_SERVICE_URL =
   process.env.AUTH_SERVICE_URL || "http://localhost:3001";
-
-const TASK_SERVICE_URL = process.env.TASK_SERVICE_URL || "http://localhost:3002";
+const TASK_SERVICE_URL =
+  process.env.TASK_SERVICE_URL || "http://localhost:3002";
+const MEDIA_SERVICE_URL =
+  process.env.MEDIA_SERVICE_URL || "http://localhost:3003";
 
 const app = express();
 
@@ -53,15 +61,25 @@ app.use(
     pathRewrite: (path) => `/auth${path}`,
   }),
 );
-app.use(
-  '/tasks',
-  gatewayAuthHandler,
-  createProxyMiddleware({
-    target: TASK_SERVICE_URL,
-    changeOrigin: true,
-    pathRewrite: (path) => `/tasks${path}`
-  })
-);
+
+const taskProxy = createProxyMiddleware({
+  target: TASK_SERVICE_URL,
+  changeOrigin: true,
+  pathRewrite: (path) => `/tasks${path}`,
+});
+
+const mediaProxy = createProxyMiddleware({
+  target: MEDIA_SERVICE_URL,
+  changeOrigin: true,
+  pathRewrite: (path) => `/tasks${path}`,
+});
+
+app.use("/tasks", gatewayAuthHandler, (req, res, next) => {
+  if (req.path.includes("/attachments")) {
+    return mediaProxy(req, res, next);
+  }
+  return taskProxy(req, res, next);
+});
 app.use((_req, _res, next) => {
   next(new AppError(404, "Route not found."));
 });

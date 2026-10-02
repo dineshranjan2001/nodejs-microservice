@@ -42,8 +42,12 @@ const protectedRoutes: ProtectedRoutesRbacTemplate[] = [
         method: "DELETE",
         path: "/tasks/:taskId",
         roles: ['ADMIN']
-    }
-
+    },
+    {
+        method: "POST",
+        path: "/tasks/:taskId/attachments",
+        roles: ['USER','ADMIN']
+    },
 ]
 
 

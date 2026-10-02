@@ -9,3 +9,4 @@ export { asyncHandler } from "./utils/asynchandler";
 export type { JwtPayload, UserRole } from "./auth/types";
 export { generateToken, verifyToken } from "./auth/jwt";
 export { requireGatewaySecret } from "./auth/gatewayauth";
+export {getHeaderInfo} from "./utils/headerinfo";

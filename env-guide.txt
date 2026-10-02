@@ -29,6 +29,7 @@ AWS_ENDPOINT_URL_S3="https://br-steep-darkness-b44m52xb.storage.c-6.us-east-2.aw
 AWS_ACCESS_KEY_ID="nak_live_2701de76663c47c08265f5307d0436e0"
 AWS_SECRET_ACCESS_KEY="nsk_live_306e4995f171fffb131f0377adea966636c7e019b8d779ddbc509ecd7f5c597f"
 AWS_REGION="us-east-2"
+STORAGE_BUCKET=ticket-attachments
 
 # SECRETS DETAILS
 JWT_SECRET=dev-strong-SECRETS
