@@ -31,3 +31,33 @@ export async function findTaskById(
 
   return result.rows[0] ?? null;
 }
+
+export async function findListAttachmentsByTaskId(
+  taskId: string,
+): Promise<Attachments[] | []> {
+  const result = await getPool().query<Attachments>(
+    `SELECT id,
+    task_id,
+    image_url,
+    public_id,
+    uploaded_by,
+    created_at FROM attachments WHERE task_id=$1`,
+    [taskId],
+  );
+  return result.rows || [];
+}
+
+export async function findAttachmentsByTaskId(
+  attachmentId: string,
+): Promise<Attachments | null> {
+  const result = await getPool().query<Attachments>(
+    `SELECT id,
+    task_id,
+    image_url,
+    public_id,
+    uploaded_by,
+    created_at FROM attachments WHERE id=$1`,
+    [attachmentId],
+  );
+  return result.rows[0] || null;
+}

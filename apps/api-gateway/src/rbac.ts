@@ -1,80 +1,99 @@
 import type { UserRole } from "shared";
-import type { ProtectedRoutesRbacTemplate, PublicRoutesTemplate } from "./type/rbacrule.type";
+import type {
+  ProtectedRoutesRbacTemplate,
+  PublicRoutesTemplate,
+} from "./type/rbacrule.type";
 
 export const publicRoutes: PublicRoutesTemplate[] = [
-    {
-        method: "POST",
-        path: "/auth/register"
-    },
-    {
-        method: "POST",
-        path: "/auth/login"
-    },
+  {
+    method: "POST",
+    path: "/auth/register",
+  },
+  {
+    method: "POST",
+    path: "/auth/login",
+  },
 ] as const;
 
 const protectedRoutes: ProtectedRoutesRbacTemplate[] = [
-    {
-        method: "GET",
-        path: "/auth/me",
-        roles: ['USER', 'ADMIN']
-    },
-    {
-        method: "POST",
-        path: "/tasks/create",
-        roles: ['USER', 'ADMIN']
-    },
-    {
-        method: "GET",
-        path: "/tasks/get-all",
-        roles: ['USER', 'ADMIN']
-    },
-    {
-        method: "GET",
-        path: "/tasks/:taskId",
-        roles: ['USER', 'ADMIN']
-    },
-    {
-        method: "PUT",
-        path: "/tasks/:taskId",
-        roles: ['USER', 'ADMIN']
-    },
-    {
-        method: "DELETE",
-        path: "/tasks/:taskId",
-        roles: ['ADMIN']
-    },
-    {
-        method: "POST",
-        path: "/tasks/:taskId/attachments",
-        roles: ['USER','ADMIN']
-    },
-]
-
+  {
+    method: "GET",
+    path: "/auth/me",
+    roles: ["USER", "ADMIN"],
+  },
+  {
+    method: "POST",
+    path: "/tasks/create",
+    roles: ["USER", "ADMIN"],
+  },
+  {
+    method: "GET",
+    path: "/tasks/get-all",
+    roles: ["USER", "ADMIN"],
+  },
+  {
+    method: "GET",
+    path: "/tasks/:taskId",
+    roles: ["USER", "ADMIN"],
+  },
+  {
+    method: "PUT",
+    path: "/tasks/:taskId",
+    roles: ["USER", "ADMIN"],
+  },
+  {
+    method: "DELETE",
+    path: "/tasks/:taskId",
+    roles: ["ADMIN"],
+  },
+  {
+    method: "POST",
+    path: "/tasks/:taskId/attachments",
+    roles: ["USER", "ADMIN"],
+  },
+  {
+    method: "GET",
+    path: "/tasks/:taskId/attachments",
+    roles: ["USER", "ADMIN"],
+  },
+  {
+    method: "GET",
+    path: "/tasks/:taskId/attachments/:attachmentId",
+    roles: ["USER", "ADMIN"],
+  },
+];
 
 // utility function for match the route path
 function matchPath(pattern: string, actual: string): boolean {
+  // normal pattern
+  if (pattern == actual) {
+    return true;
+  }
+  const patternParts = pattern.split("/");
+  const actualParts = actual.split("/");
+  if (patternParts.length !== actualParts.length) {
+    return false;
+  }
 
-    // normal pattern
-    if (pattern == actual) {
-        return true;
-    }
-    const patternParts = pattern.split('/');
-    const actualParts = actual.split('/');
-    if (patternParts.length !== actualParts.length) {
-        return false;
-    }
-
-    // dynamic routes (:id, :username)
-    return patternParts.every((part, index) => part.startsWith(":") || part === actualParts[index]);
+  // dynamic routes (:id, :username)
+  return patternParts.every(
+    (part, index) => part.startsWith(":") || part === actualParts[index],
+  );
 }
 
 export function isPublicRoute(method: string, path: string): boolean {
-    return publicRoutes.some(route => route.method === method && matchPath(route.path, path));
+  return publicRoutes.some(
+    (route) => route.method === method && matchPath(route.path, path),
+  );
 }
 
-export function getAllowedRoles(method: string, path: string): UserRole[] | null {
-    const rules = protectedRoutes.find(currentRule =>
-        currentRule.method === method && matchPath(currentRule.path, path)
-    );
-    return rules?.roles ?? null;
+export function getAllowedRoles(
+  method: string,
+  path: string,
+): UserRole[] | null {
+  const rules = protectedRoutes.find(
+    (currentRule) =>
+      currentRule.method === method && matchPath(currentRule.path, path),
+  );
+  return rules?.roles ?? null;
 }

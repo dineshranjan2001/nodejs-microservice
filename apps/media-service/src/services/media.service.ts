@@ -1,5 +1,10 @@
 import { AppError } from "shared";
-import { createAttachment, findTaskById } from "../repository/media.repository";
+import {
+  createAttachment,
+  findAttachmentsByTaskId,
+  findListAttachmentsByTaskId,
+  findTaskById,
+} from "../repository/media.repository";
 import { uploadBuffer } from "../utils/storage.utils";
 import { convertToCommonAttachmentResponse } from "../utils/media.utils";
 
@@ -44,4 +49,31 @@ export async function createAttachmentService(attachmentData: {
     uploadedBy: attachmentData.uploadedBy,
   });
   return convertToCommonAttachmentResponse(createdAttachment);
+}
+
+export async function getListAttachmentsByTaskIdService(
+  taskId: string,
+  userId: string,
+  userRole: string,
+) {
+  await assertTaskAccess(taskId, userId, userRole);
+  const getListAttachments = await findListAttachmentsByTaskId(taskId);
+  return getListAttachments.map((attachment) =>
+    convertToCommonAttachmentResponse(attachment),
+  );
+}
+
+export async function getAttachmentDetailsByIdService(
+  taskId: string,
+  attachmentId: string,
+  userId: string,
+  userRole: string,
+) {
+  await assertTaskAccess(taskId, userId, userRole);
+  const getAttachmentDetails = await findAttachmentsByTaskId(attachmentId);
+  if (!getAttachmentDetails) {
+    throw new AppError(404, "Attachment not found");
+  }
+
+  return convertToCommonAttachmentResponse(getAttachmentDetails);
 }
