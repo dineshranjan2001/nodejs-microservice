@@ -35,3 +35,6 @@ STORAGE_BUCKET=ticket-attachments
 JWT_SECRET=dev-strong-SECRETS
 JWT_EXPIRES_IN=7d
 GATEWAY_SECRET=gateway-secret
+
+#KAFKA DETAILS
+KAFKA_BROKERS=localhost:9092
