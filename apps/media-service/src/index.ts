@@ -10,6 +10,7 @@ import {
   successHandler,
 } from "shared";
 import attachmentRoutes from "./routes/media.route";
+import { initKafka } from "./kafka";
 
 config({ path: resolve(process.cwd(), ".env") });
 config({ path: resolve(process.cwd(), "../../.env") });
@@ -33,6 +34,17 @@ app.use((_req, _res, next) => {
 
 app.use(errorHandler);
 
-app.listen(MEDIA_PORT, () => {
-  logger.info(`Media service is now running on port ${MEDIA_PORT}`);
-});
+
+(async () => {
+ try {
+   await initKafka();
+   app.listen(MEDIA_PORT, () => {
+     logger.info(`Media service is now running on port ${MEDIA_PORT}`);
+   });
+ } catch (error) {
+  logger.error({error},"Kafka Attachment Producer init failed.")
+ }
+
+})();
+
+

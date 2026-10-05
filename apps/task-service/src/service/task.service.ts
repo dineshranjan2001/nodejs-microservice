@@ -2,10 +2,15 @@ import { AppError } from "shared";
 import { createTask, deleteTaskById, getTaskById, listTasks, updateTask } from "../repository/task.repository";
 import type { CreateTaskInput, ListTaskQueryInput, UpdateTaskInput } from "../types/task.type";
 import { convertToCommonTaskResponse } from "../utils/task.utils";
+import { publishTaskEvent } from "../kafka";
 
 
 export async function createTaskService(taskDetails: CreateTaskInput) {
     const createdTaskDetails = await createTask(taskDetails);
+
+    // publish one event here saying ok now we just created one task.
+    await publishTaskEvent(createdTaskDetails.id,taskDetails.created_by);
+
     return convertToCommonTaskResponse(createdTaskDetails);
 }
 

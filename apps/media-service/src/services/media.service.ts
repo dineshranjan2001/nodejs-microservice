@@ -7,6 +7,7 @@ import {
 } from "../repository/media.repository";
 import { uploadBuffer } from "../utils/storage.utils";
 import { convertToCommonAttachmentResponse } from "../utils/media.utils";
+import { publishAttachmentEvent } from "../kafka";
 
 export async function assertTaskAccess(
   taskId: string,
@@ -48,6 +49,10 @@ export async function createAttachmentService(attachmentData: {
     publicId: uploaded.publicId,
     uploadedBy: attachmentData.uploadedBy,
   });
+
+  // publish the attachment uploaded event to kafka.
+  await publishAttachmentEvent(createdAttachment.id,createdAttachment.task_id,attachmentData.uploadedBy);
+  
   return convertToCommonAttachmentResponse(createdAttachment);
 }
 
