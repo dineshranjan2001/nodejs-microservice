@@ -61,6 +61,11 @@ const protectedRoutes: ProtectedRoutesRbacTemplate[] = [
     path: "/tasks/:taskId/attachments/:attachmentId",
     roles: ["USER", "ADMIN"],
   },
+  {
+    method: "GET",
+    path: "/tasks/:taskId/workflows",
+    roles: ["USER", "ADMIN"],
+  }
 ];
 
 // utility function for match the route path
